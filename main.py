@@ -1,8 +1,7 @@
 
-import pygame
+import pygame, sys, os
 from pygame import *
 import math
-import os
 WIN_WIDTH = 800
 WIN_HEIGHT = 640
 HALF_WIDTH = int(WIN_WIDTH / 2)
@@ -103,11 +102,10 @@ class Media_Screen():
         waiting = True
         while waiting:
             self.timer.tick(60)
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    waiting = False
                     self.running = False
+                    waiting = False
                 if event.type == pygame.KEYUP:
                     waiting = False
 
@@ -132,8 +130,11 @@ class Start_Screen(Media_Screen):
         self.screen.blit(image,((WIN_WIDTH-image_width)/2,(WIN_HEIGHT-image_height)/3))
         self.draw_text("PRESS ANY KEY",32,(240,248,255),WIN_WIDTH/2,WIN_HEIGHT*3 /4)
         pygame.display.flip()
+        self.running = True
         self.wait_for_key()
-
+        if not self.running:
+            pygame.quit()
+            sys.exit()
 def main():
     global cameraX, cameraY
     pygame.init()
@@ -261,7 +262,7 @@ class EnemyMosquito(Entity):
         Entity.__init__(self)
         self.xvel = 4.0
         self.yvel = 4.0
-
+        self.follow = False
         self.onGround = False
         self._image_origin = pygame.image.load(PATH + "mosquito1.png")
         self._image_origin = pygame.transform.scale(self._image_origin, (32, 32))
@@ -296,6 +297,11 @@ class EnemyMosquito(Entity):
         # find normalized direction vector (dx, dy) between enemy and player
         dx, dy = self.rect.x - posX, self.rect.y - posY
         dist = math.hypot(dx, dy) #math.sqrt(dx*dx + dy*dy) 
+        if not self.follow:
+            if dist < 400:
+                self.follow = True
+            else:
+                return
         try:
             dx, dy =  dx*-1.0 / dist, dy*-1.0 / dist
         except ZeroDivisionError:
@@ -334,7 +340,7 @@ class EnemySpider(Entity):
         Entity.__init__(self)
         self.xvel = 4.0
         self.yvel = 4.0
-
+        self.follow = False
         self.onGround = False
         self._image_origin = pygame.image.load(PATH + "spider1.png")
         self._image_origin = pygame.transform.scale(self._image_origin, (32, 32))
@@ -366,6 +372,12 @@ class EnemySpider(Entity):
         a.fill(Color("#d8c217")) # change for image
         b = Rect(32, 32, 32, 32)
     def move_towards_player(self, posX, posY):
+        dist = math.hypot(self.rect.x - posX, self.rect.y - posY) #math.sqrt(dx*dx + dy*dy) 
+        if not self.follow:
+            if dist < 200:
+                self.follow = True
+            else:
+                return
         dx = posX - self.rect.x
         self.rect.y += 4.0
         if dx > 0:
@@ -504,14 +516,12 @@ class Platform(Entity):
         image_rect = self.image.get_rect().size
         self.image.convert()
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
-
     def update(self):
         pass
 
 class ExitBlock(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y, "platform/18.png")
-        self.image.fill(Color("#0033FF"))
 
 if __name__ == "__main__":
     main()
