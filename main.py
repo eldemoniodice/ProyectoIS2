@@ -1,8 +1,7 @@
 
-import pygame
+import pygame, sys, os
 from pygame import *
 import math
-import os
 WIN_WIDTH = 800
 WIN_HEIGHT = 640
 HALF_WIDTH = int(WIN_WIDTH / 2)
@@ -23,9 +22,9 @@ class Level():
         self.bg = pygame.Surface((32,32))
         #self.bg =pygame.image.load("bg1.png")
         self.bg.convert()
-        #self.bg.fill(Color("#000000")) 
+        #self.bg.fill(Color("#000000"))
         self.entities = pygame.sprite.Group()
-        
+
         self.platforms = []
         self.enemies = []
         x = y = 0
@@ -33,12 +32,38 @@ class Level():
         # build the level
         for row in level:
             for col in row:
+                if col == "1":
+                    p = Platform(x, y, "platform/jungle_pack_07.png")
+                    self.platforms.append(p)
+                    self.entities.add(p)
+
+                if col == "2":
+                    p = Platform(x, y, "platform/jungle_pack_35.png")
+                    self.platforms.append(p)
+                    self.entities.add(p)
                 if col == "P":
+                    p = Platform(x, y, "platform/jungle_pack_05.png")
+                    self.platforms.append(p)
+                    self.entities.add(p)
+                if col == "3":
                     p = Platform(x, y, "platform/jungle_pack_03.png")
                     self.platforms.append(p)
                     self.entities.add(p)
-                if col == "2":
-                    p = Platform(x, y, "platform/jungle_pack_35.png")
+                if col == "4":
+                    p = Platform(x, y, "platform/jungle_pack_11.png")
+                    self.platforms.append(p)
+                    self.entities.add(p)
+
+                if col == "5":
+                    p = Platform(x, y, "platform/jungle_pack_19.png")
+                    self.platforms.append(p)
+                    self.entities.add(p)
+                if col == "6":
+                    p = Platform(x, y, "platform/jungle_pack_21.png")
+                    self.platforms.append(p)
+                    self.entities.add(p)
+                if col == "7":
+                    p = Platform(x, y, "platform/jungle_pack_40.png")
                     self.platforms.append(p)
                     self.entities.add(p)
                 if col == "E":
@@ -53,6 +78,14 @@ class Level():
                     s = EnemySpider(x, y)
                     self.enemies.append(s)
                     self.entities.add(s)
+
+                if col == "0":
+                    p = Platform(x, y, "platform/jungle_pack_09.png")
+                    self.platforms.append(p)
+                    self.entities.add(p)
+
+
+
                 if col == "F":
                     self.player = Player(x, y, player_settings[2])
                 x += 32
@@ -103,11 +136,10 @@ class Media_Screen():
         waiting = True
         while waiting:
             self.timer.tick(60)
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    waiting = False
                     self.running = False
+                    waiting = False
                 if event.type == pygame.KEYUP:
                     waiting = False
 
@@ -132,12 +164,15 @@ class Start_Screen(Media_Screen):
         self.screen.blit(image,((WIN_WIDTH-image_width)/2,(WIN_HEIGHT-image_height)/3))
         self.draw_text("PRESS ANY KEY",32,(240,248,255),WIN_WIDTH/2,WIN_HEIGHT*3 /4)
         pygame.display.flip()
+        self.running = True
         self.wait_for_key()
-
+        if not self.running:
+            pygame.quit()
+            sys.exit()
 def main():
     global cameraX, cameraY
     pygame.init()
-    
+
     pygame.display.set_caption("Froggy!")
     timer = pygame.time.Clock()
 
@@ -145,42 +180,41 @@ def main():
 
     up = down = left = right = space = running = False
     level = [
-        "PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",
-        "P                                                                                    P",
-        "P                                                                                     ",
-        "P                                                                                     ",
-        "P                                                PPPPPPPPPPP                         P",
-        "P                    PPPPPP                                             PPPPPP       P",
-        "P                                                                                    P",
-        "P                                                                                    P",
-        "P    PPPPPPPP                                                                        P",
-        "P                             S                                                      P",
-        "P                          PPPPPPP              Q            PPPPPP                  P",
-        "P                                                                                    P",
-        "P                                                                                    P",
-        "P                                                                     PPPPPPP        P",
-        "P                                                                                    P",
-        "P                                     PPPPPP                                         P",
-        "P                                                                                    P",
-        "P    F                                            PPPPPPPPPPP                        P",
-        "P                                                                                    P",
-        "P                 22222222222                                                        P",
-        "P                                                                                    P",
-        "P                                                                                    P",
-        "P                                                                                    P",
-        "P                                                               Q                    E",
-        "PPPPPPPPPPPPPPPPPPPPPPPPPPP   PPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPPP",]
+        "                                                                                                                            ",
+        "                                                                                                                            ",
+        "                                                                                                                            ",
+        "                                                                                                                            ",
+        "                                                                                            Q                               ",
+        "                                                                                                              3PPP1         ",
+        "                                                                                                              22222         ",
+        "                                                                                                              22222         ",
+        "                                                                                          3PPPPPPP1           22222         ",
+        "                                                                                          222222222           22222PPPPPPPPP",
+        "                                                                                          222222222           22222222222222",
+        "                                                                                          222222222           22222222222222",
+        "                                                                             S    3PPPPPPP222222222           22222222222222",
+        "                                                                         3PPPPPPPP22222222222222222           22222222222222",
+        "                                                                         22222222222222222222222222           22222222222222",
+        "                                                                    3PPPP22222222222222222222222222           22222222222222",
+        "                                                5PPPPPP7         0PP2222222222222222222222222222222           22222222222222",
+        "                                                 666666            66662222222222222222222222222222           22222222222222",
+        "                                      PPPPPP                           6666222222222222222222222222           22222222222222",
+        "                                      622226                               662222222222222222222222           22222222222222",
+        "                                       6666                                  6666666666666222222222           22222222222222",
+        "                                                                                          222222222           22222222222222",
+        "       F                                                                                  222222222           22222222222222",
+        "PPPPPPPPPPPPPPPPPP1         3PPPPPPPPPPPPPPPPPPPPPPPP1         P     3PPPPPPPPPPPPPPPPPPPP222222222           22222222222222"]
     player_settings = (32, 32,PATH+ "froggy.png")
     level = Level(level, player_settings, PATH+'bg_music1.ogg')
-    
+
 
     done = play_again = False
     while not (done or play_again):
         timer.tick(60)
 
-       
+
         for e in pygame.event.get():
-            if e.type == QUIT: 
+            if e.type == QUIT:
                 done = True
             if e.type == KEYDOWN and e.key == K_ESCAPE:
                 paused = True#change for paused menu
@@ -261,7 +295,7 @@ class EnemyMosquito(Entity):
         Entity.__init__(self)
         self.xvel = 4.0
         self.yvel = 4.0
-
+        self.follow = False
         self.onGround = False
         self._image_origin = pygame.image.load(PATH + "mosquito1.png")
         self._image_origin = pygame.transform.scale(self._image_origin, (32, 32))
@@ -295,7 +329,12 @@ class EnemyMosquito(Entity):
     def move_towards_player(self, posX, posY):
         # find normalized direction vector (dx, dy) between enemy and player
         dx, dy = self.rect.x - posX, self.rect.y - posY
-        dist = math.hypot(dx, dy) #math.sqrt(dx*dx + dy*dy) 
+        dist = math.hypot(dx, dy) #math.sqrt(dx*dx + dy*dy)
+        if not self.follow:
+            if dist < 400:
+                self.follow = True
+            else:
+                return
         try:
             dx, dy =  dx*-1.0 / dist, dy*-1.0 / dist
         except ZeroDivisionError:
@@ -334,7 +373,7 @@ class EnemySpider(Entity):
         Entity.__init__(self)
         self.xvel = 4.0
         self.yvel = 4.0
-
+        self.follow = False
         self.onGround = False
         self._image_origin = pygame.image.load(PATH + "spider1.png")
         self._image_origin = pygame.transform.scale(self._image_origin, (32, 32))
@@ -347,7 +386,7 @@ class EnemySpider(Entity):
         # increment in x direction
         #self.rect.left += self.xvel
         # do x-axis collisions
-        self.xvel = 7.0
+        self.xvel = 6.0
         self.yvel = 4.0
 
         self.move_towards_player(posX, posY)
@@ -366,6 +405,12 @@ class EnemySpider(Entity):
         a.fill(Color("#d8c217")) # change for image
         b = Rect(32, 32, 32, 32)
     def move_towards_player(self, posX, posY):
+        dist = math.hypot(self.rect.x - posX, self.rect.y - posY) #math.sqrt(dx*dx + dy*dy)
+        if not self.follow:
+            if dist < 200:
+                self.follow = True
+            else:
+                return
         dx = posX - self.rect.x
         self.rect.y += 4.0
         if dx > 0:
@@ -451,7 +496,7 @@ class Player(Entity):
         self.collide(0, self.yvel, platforms)
         vida = self.collide_enemies(enemies)
         self.beobserver(enemies, platforms)
-        
+
         a = Surface((32, 32))
         a.convert()
         a.fill(Color("#d8c217")) # change for image
@@ -504,14 +549,12 @@ class Platform(Entity):
         image_rect = self.image.get_rect().size
         self.image.convert()
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
-
     def update(self):
         pass
 
 class ExitBlock(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y, "platform/18.png")
-        self.image.fill(Color("#0033FF"))
 
 if __name__ == "__main__":
     main()
