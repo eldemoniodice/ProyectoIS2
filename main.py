@@ -329,7 +329,11 @@ class EnemyMosquito(Entity):
     def move_towards_player(self, posX, posY):
         # find normalized direction vector (dx, dy) between enemy and player
         dx, dy = self.rect.x - posX, self.rect.y - posY
+<<<<<<< HEAD
         dist = math.hypot(dx, dy) #math.sqrt(dx*dx + dy*dy)
+=======
+        dist = math.hypot(dx, dy) #math.sqrt(dx*dx + dy*dy) 
+>>>>>>> 28439242c8405b9ce25f6009cfa1d5be9df4ab3e
         if not self.follow:
             if dist < 400:
                 self.follow = True
@@ -405,7 +409,11 @@ class EnemySpider(Entity):
         a.fill(Color("#d8c217")) # change for image
         b = Rect(32, 32, 32, 32)
     def move_towards_player(self, posX, posY):
+<<<<<<< HEAD
         dist = math.hypot(self.rect.x - posX, self.rect.y - posY) #math.sqrt(dx*dx + dy*dy)
+=======
+        dist = math.hypot(self.rect.x - posX, self.rect.y - posY) #math.sqrt(dx*dx + dy*dy) 
+>>>>>>> 28439242c8405b9ce25f6009cfa1d5be9df4ab3e
         if not self.follow:
             if dist < 200:
                 self.follow = True
