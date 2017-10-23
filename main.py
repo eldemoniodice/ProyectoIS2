@@ -539,11 +539,12 @@ class Player(Entity):
         self.tongue = 0
 
         #todas las demas imagenes
-        self.imagen1 = pygame.image.load(PATH+ "froggy1.gif")
+        path_tongue = "froggy_tongue/"
+        self.imagen1 = pygame.image.load(PATH+ path_tongue+"froggy_tongue_1.gif")
         self.imagen1 = pygame.transform.scale(self.imagen1, (32, 32)).convert_alpha()
-        self.imagen2 = pygame.image.load(PATH+ "froggy2.gif")
+        self.imagen2 = pygame.image.load(PATH+ path_tongue+"froggy_tongue_2.gif")
         self.imagen2 = pygame.transform.scale(self.imagen2, (32, 32)).convert_alpha()
-        self.imagen3 = pygame.image.load(PATH+ "froggy3.gif")
+        self.imagen3 = pygame.image.load(PATH+ path_tongue+"froggy_tongue_3.gif")
         self.imagen3 = pygame.transform.scale(self.imagen3, (32, 32)).convert_alpha()
         
         self.imagenes_derecha = [self._image_origin, self.imagen1, self.imagen2, self.imagen3]
