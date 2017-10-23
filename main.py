@@ -529,8 +529,8 @@ class Player(Entity):
         self.yvel = 0
         self.onGround = False
         
-        self._image_origin = pygame.image.load(image_path)
-        self._image_origin = pygame.transform.scale(self._image_origin, (32, 32)).convert_alpha()
+        self._image_origin = pygame.image.load(PATH +"sprite_froggy0.png")
+        self._image_origin = pygame.transform.scale(self._image_origin, (52, 52)).convert_alpha()
         self._image_toLeft = pygame.transform.flip(self._image_origin, True, False).convert_alpha()
         self.image  = self._image_origin
         
@@ -540,21 +540,21 @@ class Player(Entity):
 
         #todas las demas imagenes
         path_tongue = "froggy_tongue/"
-        self.imagen1 = pygame.image.load(PATH+ path_tongue+"froggy_tongue_1.gif")
-        self.imagen1 = pygame.transform.scale(self.imagen1, (32, 32)).convert_alpha()
-        self.imagen2 = pygame.image.load(PATH+ path_tongue+"froggy_tongue_2.gif")
-        self.imagen2 = pygame.transform.scale(self.imagen2, (32, 32)).convert_alpha()
-        self.imagen3 = pygame.image.load(PATH+ path_tongue+"froggy_tongue_3.gif")
-        self.imagen3 = pygame.transform.scale(self.imagen3, (32, 32)).convert_alpha()
-        
-        self.imagenes_derecha = [self._image_origin, self.imagen1, self.imagen2, self.imagen3]
 
-        self.imagen1 = pygame.transform.flip(self.imagen1, True, False).convert_alpha()
-        self.imagen2 = pygame.transform.flip(self.imagen2, True, False).convert_alpha()
-        self.imagen3 = pygame.transform.flip(self.imagen3, True, False).convert_alpha()
+
+        self.imagenes_derecha = []
+        self.imagenes_izquierda = []
+        self.imagenes_derecha.append(self._image_origin)
+        self.imagenes_izquierda.append(self._image_toLeft)
+        for i in range(3):
+            i=i+1
+            im = pygame.image.load(PATH+ path_tongue+"froggy_tongue_"+str(i)+".gif")
+            im = pygame.transform.scale(im, (52, 52)).convert_alpha()
+            self.imagenes_derecha.append(im)
+            im_toLeft = pygame.transform.flip(im, True, False).convert_alpha()
+            self.imagenes_izquierda.append(im_toLeft)
 
         
-        self.imagenes_izquierda = [self._image_toLeft, self.imagen1, self.imagen2, self.imagen3]
         self.lado = 'derecha'
         self.animacion = Animacion()
         
@@ -579,17 +579,16 @@ class Player(Entity):
             self.lado = 'derecha'
         if space:
             if self.tongue <= 0:
-                self.tongue = 20
-        print(self.forma[0])
+                self.tongue = 100
+        #print(self.tongue)
 
-        #
-        if space:
+        
+        if space and self.forma[0] == 0:
             self.forma = self.animacion.animarCompleta(self.imagenes_derecha, self.forma)
-            print('22222222222222222')
+            #print('22222222222222222')
         elif self.forma[0] != 0:
-            self.forma = self.animacion.animarCompleta(self.imagenes_derecha, self.forma)
-
-        print(space)
+            if self.tongue%5==0:
+                self.forma = self.animacion.animarCompleta(self.imagenes_derecha, self.forma)
 
         #cambiar imagen
         if self.lado == 'izquierda':
