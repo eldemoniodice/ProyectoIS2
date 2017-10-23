@@ -1,5 +1,7 @@
 
 import pygame, sys, os
+from PIL import Image, ImageOps
+import numpy
 from pygame import *
 import math
 WIN_WIDTH = 800
@@ -11,9 +13,10 @@ DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 DEPTH = 32
 FLAGS = 0
 CAMERA_SLACK = 30
-#PATH=os.path.dirname(__file__) +"/Resources/"#+ "/IngSW2_Froggy_Leo/"
 
-PATH="Resources/"#+ "/IngSW2_Froggy_Leo/"
+IMAGE_SIZES = {}
+
+PATH="Resources/"
 
 
 class Level():
@@ -26,6 +29,7 @@ class Level():
         self.entities = pygame.sprite.Group()
 
         self.platforms = []
+        self.decorations = []
         self.enemies = []
         x = y = 0
         self.level = level
@@ -85,9 +89,26 @@ class Level():
                     self.entities.add(p)
 
                 if col == "D":
-                    d = Decoracion(x, y, "platform/jungle_pack_67.png")
-                    self.platforms.append(d)
+                    d = Decoration(x, y, 128,128, "platform/jungle_pack_67.png")
+                    self.decorations.append(d)
                     self.entities.add(d)
+
+                if col == "!":
+                    d = Decoration(x, y, 128,128, "platform/jungle_pack_59.png")
+                    self.decorations.append(d)
+                    self.entities.add(d)
+
+                if col == "¡":
+                    d = Decoration(x, y, 128,128, "platform/jungle_pack_57.png")
+                    self.decorations.append(d)
+                    self.entities.add(d)
+                if col == "B":
+                    d = Decoration(x, y, 128,128, "platform/jungle_pack_66.png")
+                    self.decorations.append(d)
+                    self.entities.add(d)
+
+
+
 
                 if col == "F":
                     self.player = Player(x, y, player_settings[2])
@@ -101,7 +122,7 @@ class Level():
 
         self.camera = Camera(Camera.complex_camera, self.total_level_width, self.total_level_height)
         self.entities.add(self.player)
-        self.backGround = Background(PATH+'bg1.png', [0,0], (1280, 720))
+        self.backGround = Background(PATH+'platform/bg_jungle.png', [0,0], (1280, 720))
 
         self.playmusic(bg_music)
     def update(self, up, down, left, right, space, running):
@@ -155,7 +176,7 @@ class Media_Screen():
 
 class Start_Screen(Media_Screen):
     def __init__(self, timer):
-        Media_Screen.__init__(self, timer,(Background(PATH+'bg1.png', [0,0], (1280, 720))))
+        Media_Screen.__init__(self, timer,(Background(PATH+'platform/bg_jungle.png', [0,0], (1280, 720))))
         self.screen=pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.show_start_screen()
     def show_start_screen(self):
@@ -183,30 +204,30 @@ def main():
 
     up = down = left = right = space = running = False
     level = [
-        "                                                                                                                            ",
-        "                                                                                                                            ",
-        "                                                                                                                            ",
-        "                                                                                                                            ",
-        "                                                                                            Q                               ",
-        "                                                                                                              3PPP1         ",
-        "                                                                                                              22222         ",
-        "                                                                                                              22222         ",
-        "                                                                                          3PPPPPPP1           22222         ",
-        "                                                                                          222222222           22222PPPPPPPPP",
-        "                                                                                          222222222           22222222222222",
-        "                                                                                          222222222           22222222222222",
-        "                                                                             S    3PPPPPPP222222222           22222222222222",
-        "                                                                         3PPPPPPPP22222222222222222           22222222222222",
-        "                                                                         22222222222222222222222222           22222222222222",
-        "                                                                    3PPPP22222222222222222222222222           22222222222222",
-        "                                                5PPPPPP7         0PP2222222222222222222222222222222           22222222222222",
-        "                                                 666666            66662222222222222222222222222222           22222222222222",
-        "                                      PPPPPP                           6666222222222222222222222222           22222222222222",
-        "                                      622226                               662222222222222222222222           22222222222222",
-        "                                       6666                                  6666666666666222222222           22222222222222",
-        "                                                                                          222222222           22222222222222",
-        "       F       D                                                                          222222222           22222222222222",
-        "PPPPPPPPPPPPPPPPPP1         3PPPPPPPPPPPPPPPPPPPPPPPP1         P     3PPPPPPPPPPPPPPPPPPPP222222222           22222222222222"]
+        "                                                                                                                             ",
+        "                                                                                                                             ",
+        "                                                                                                                             ",
+        "                                                                                                                             ",
+        "                                                                                             Q                               ",
+        "                                                                                                               3PPP1         ",
+        "                                                                                                               22222         ",
+        "                                                                                              D                22222         ",
+        "                                                                                           3PPPPPPP1           22222         ",
+        "                                                                                           222222222           22222PPPPPPPPP",
+        "                                                                                           222222222           22222222222222",
+        "                                                                                      B    222222222           22222222222222",
+        "                                                                              S    3PPPPPPP222222222           22222222222222",
+        "                                                                          3PPPPPPPP22222222222222222           22222222222222",
+        "                                                                      !   22222222222222222222222222           22222222222222",
+        "                                                   B                 3PPPP22222222222222222222222222           22222222222222",
+        "                                                5PPPPPP7          0PP2222222222222222222222222222222           22222222222222",
+        "                                        B        666666             66662222222222222222222222222222           22222222222222",
+        "                                      PPPPPP                            6666222222222222222222222222           22222222222222",
+        "                                      622226                                662222222222222222222222           22222222222222",
+        "                                       6666                                   6666666666666222222222           22222222222222",
+        "                                                                                           222222222           22222222222222",
+        "    ¡  F     !                   B          D     ¡                     D                  222222222           22222222222222",
+        "PPPPPPPPPPPPPPPPPP1         3PPPPPPPPPPPPPPPPPPPPPPPP1         P     3PPPPPPPPPPPPPPPPPPPP2222222222           22222222222222"]
     player_settings = (32, 32,PATH+ "froggy.png")
     level = Level(level, player_settings, PATH+'bg_music1.ogg')
 
@@ -452,11 +473,12 @@ class Player(Entity):
         self.onGround = False
         #self.image = Surface((32,32))
         self._image_origin = pygame.image.load(image_path)
+        self._image_origin = pygame.transform.scale(self._image_origin, (32, 32))
         self._image_toLeft = pygame.transform.flip(self._image_origin, True, False)
         self.image  = self._image_origin
         #self.image.fill(Color("#0000FF"))
         image_rect = (self.image.get_rect().size)
-        self.image.convert()
+        #self.image.convert()
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
         self.tongue = 0
 
@@ -542,6 +564,24 @@ class Player(Entity):
             q.observar(self.rect.x, self.rect.y, platforms)
 
 
+def crop(image_name, rx, ry):
+        pil_image = Image.open(image_name)
+        size = (pil_image.width, pil_image.height)
+        np_array = numpy.array(pil_image)
+        blank_px = [255, 255, 255, 0]
+        mask = np_array != blank_px
+        coords = numpy.argwhere(mask)
+        try:
+            x0, y0, z0 = coords.min(axis=0)
+            x1, y1, z1 = coords.max(axis=0) + 1
+            cropped_box = np_array[x0:x1, y0:y1, z0:z1]
+            pil_image = Image.fromarray(cropped_box, 'RGBA')
+        except Exception:
+            pass
+        print(image_name + str((pil_image.width, pil_image.height)))
+        return (pil_image.width*rx/size[0], pil_image.height*ry/size[1])
+
+
 class Platform(Entity):
     def __init__(self, x, y, image_path):
         Entity.__init__(self)
@@ -549,17 +589,35 @@ class Platform(Entity):
         self._image_origin = pygame.image.load(PATH + image_path)
         self._image_origin = pygame.transform.scale(self._image_origin, (32, 32))
         self.image  = self._image_origin
-        image_rect = self.image.get_rect().size
-        self.image.convert()
+
+        image_rect = None
+        try:
+             image_rect = IMAGE_SIZES[PATH + image_path]
+        except KeyError:
+            image_rect = crop(PATH + image_path, 32, 32)
+            IMAGE_SIZES[PATH + image_path] = image_rect
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
     def update(self):
         pass
 
-class Decoracion(Platform):
-    def __init__(self, x, y, image_path):
-        Platform.__init__(self,x,y,"platform/jungle_pack_67.png")
+class Decoration(Entity):
+    def __init__(self, x, y, w, h, image_path):
+        Entity.__init__(self)
 
+        self._image_origin = pygame.image.load(PATH + image_path)
+        self._image_origin = pygame.transform.scale(self._image_origin, (w, h))
+        self.image  = self._image_origin
 
+        image_rect = None
+        try:
+             image_rect = IMAGE_SIZES[PATH + image_path]
+        except KeyError:
+            image_rect = crop(PATH + image_path, w, h)
+            IMAGE_SIZES[PATH + image_path] = image_rect
+        self.rect = Rect(x, y-h+32, image_rect[0], image_rect[1])
+
+    def update(self):
+        pass
 
 class ExitBlock(Platform):
     def __init__(self, x, y):
