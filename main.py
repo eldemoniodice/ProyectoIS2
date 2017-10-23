@@ -1,5 +1,7 @@
 
 import pygame, sys, os
+from PIL import Image, ImageOps
+import numpy
 from pygame import *
 import math
 WIN_WIDTH = 800
@@ -11,9 +13,10 @@ DISPLAY = (WIN_WIDTH, WIN_HEIGHT)
 DEPTH = 32
 FLAGS = 0
 CAMERA_SLACK = 30
-#PATH=os.path.dirname(__file__) +"/Resources/"#+ "/IngSW2_Froggy_Leo/"
 
-PATH="Resources/"#+ "/IngSW2_Froggy_Leo/"
+IMAGE_SIZES = {}
+
+PATH="Resources/"
 
 
 class Level():
@@ -329,11 +332,7 @@ class EnemyMosquito(Entity):
     def move_towards_player(self, posX, posY):
         # find normalized direction vector (dx, dy) between enemy and player
         dx, dy = self.rect.x - posX, self.rect.y - posY
-<<<<<<< HEAD
         dist = math.hypot(dx, dy) #math.sqrt(dx*dx + dy*dy)
-=======
-        dist = math.hypot(dx, dy) #math.sqrt(dx*dx + dy*dy) 
->>>>>>> 28439242c8405b9ce25f6009cfa1d5be9df4ab3e
         if not self.follow:
             if dist < 400:
                 self.follow = True
@@ -409,11 +408,7 @@ class EnemySpider(Entity):
         a.fill(Color("#d8c217")) # change for image
         b = Rect(32, 32, 32, 32)
     def move_towards_player(self, posX, posY):
-<<<<<<< HEAD
         dist = math.hypot(self.rect.x - posX, self.rect.y - posY) #math.sqrt(dx*dx + dy*dy)
-=======
-        dist = math.hypot(self.rect.x - posX, self.rect.y - posY) #math.sqrt(dx*dx + dy*dy) 
->>>>>>> 28439242c8405b9ce25f6009cfa1d5be9df4ab3e
         if not self.follow:
             if dist < 200:
                 self.follow = True
@@ -457,11 +452,12 @@ class Player(Entity):
         self.onGround = False
         #self.image = Surface((32,32))
         self._image_origin = pygame.image.load(image_path)
+        self._image_origin = pygame.transform.scale(self._image_origin, (32, 32))
         self._image_toLeft = pygame.transform.flip(self._image_origin, True, False)
         self.image  = self._image_origin
         #self.image.fill(Color("#0000FF"))
         image_rect = (self.image.get_rect().size)
-        self.image.convert()
+        #self.image.convert()
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
         self.tongue = 0
 
@@ -547,6 +543,24 @@ class Player(Entity):
             q.observar(self.rect.x, self.rect.y, platforms)
 
 
+def crop(image_name, rx, ry):
+        pil_image = Image.open(image_name)
+        size = (pil_image.width, pil_image.height)
+        np_array = numpy.array(pil_image)
+        blank_px = [255, 255, 255, 0]
+        mask = np_array != blank_px
+        coords = numpy.argwhere(mask)
+        try:
+            x0, y0, z0 = coords.min(axis=0)
+            x1, y1, z1 = coords.max(axis=0) + 1
+            cropped_box = np_array[x0:x1, y0:y1, z0:z1]
+            pil_image = Image.fromarray(cropped_box, 'RGBA')
+        except Exception:
+            pass
+        print(image_name + str((pil_image.width, pil_image.height)))
+        return (pil_image.width*rx/size[0], pil_image.height*ry/size[1])
+
+
 class Platform(Entity):
     def __init__(self, x, y, image_path):
         Entity.__init__(self)
@@ -554,8 +568,13 @@ class Platform(Entity):
         self._image_origin = pygame.image.load(PATH + image_path)
         self._image_origin = pygame.transform.scale(self._image_origin, (32, 32))
         self.image  = self._image_origin
-        image_rect = self.image.get_rect().size
-        self.image.convert()
+
+        image_rect = None
+        try:
+             image_rect = IMAGE_SIZES[PATH + image_path]
+        except KeyError:
+            image_rect = crop(PATH + image_path, 32, 32)
+            IMAGE_SIZES[PATH + image_path] = image_rect
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
     def update(self):
         pass
