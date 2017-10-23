@@ -84,7 +84,10 @@ class Level():
                     self.platforms.append(p)
                     self.entities.add(p)
 
-
+                if col == "D":
+                    d = Decoracion(x, y, "platform/jungle_pack_67.png")
+                    self.platforms.append(d)
+                    self.entities.add(d)
 
                 if col == "F":
                     self.player = Player(x, y, player_settings[2])
@@ -202,7 +205,7 @@ def main():
         "                                      622226                               662222222222222222222222           22222222222222",
         "                                       6666                                  6666666666666222222222           22222222222222",
         "                                                                                          222222222           22222222222222",
-        "       F                                                                                  222222222           22222222222222",
+        "       F       D                                                                          222222222           22222222222222",
         "PPPPPPPPPPPPPPPPPP1         3PPPPPPPPPPPPPPPPPPPPPPPP1         P     3PPPPPPPPPPPPPPPPPPPP222222222           22222222222222"]
     player_settings = (32, 32,PATH+ "froggy.png")
     level = Level(level, player_settings, PATH+'bg_music1.ogg')
@@ -329,11 +332,7 @@ class EnemyMosquito(Entity):
     def move_towards_player(self, posX, posY):
         # find normalized direction vector (dx, dy) between enemy and player
         dx, dy = self.rect.x - posX, self.rect.y - posY
-<<<<<<< HEAD
         dist = math.hypot(dx, dy) #math.sqrt(dx*dx + dy*dy)
-=======
-        dist = math.hypot(dx, dy) #math.sqrt(dx*dx + dy*dy) 
->>>>>>> 28439242c8405b9ce25f6009cfa1d5be9df4ab3e
         if not self.follow:
             if dist < 400:
                 self.follow = True
@@ -409,11 +408,7 @@ class EnemySpider(Entity):
         a.fill(Color("#d8c217")) # change for image
         b = Rect(32, 32, 32, 32)
     def move_towards_player(self, posX, posY):
-<<<<<<< HEAD
         dist = math.hypot(self.rect.x - posX, self.rect.y - posY) #math.sqrt(dx*dx + dy*dy)
-=======
-        dist = math.hypot(self.rect.x - posX, self.rect.y - posY) #math.sqrt(dx*dx + dy*dy) 
->>>>>>> 28439242c8405b9ce25f6009cfa1d5be9df4ab3e
         if not self.follow:
             if dist < 200:
                 self.follow = True
@@ -559,6 +554,12 @@ class Platform(Entity):
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
     def update(self):
         pass
+
+class Decoracion(Platform):
+    def __init__(self, x, y, image_path):
+        Platform.__init__(self,x,y,"platform/jungle_pack_67.png")
+
+
 
 class ExitBlock(Platform):
     def __init__(self, x, y):
