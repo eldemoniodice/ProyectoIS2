@@ -29,6 +29,7 @@ class Level():
         self.entities = pygame.sprite.Group()
 
         self.platforms = []
+        self.decorations = []
         self.enemies = []
         x = y = 0
         self.level = level
@@ -87,6 +88,26 @@ class Level():
                     self.platforms.append(p)
                     self.entities.add(p)
 
+                if col == "D":
+                    d = Decoration(x, y, 128,128, "platform/jungle_pack_67.png")
+                    self.decorations.append(d)
+                    self.entities.add(d)
+
+                if col == "!":
+                    d = Decoration(x, y, 128,128, "platform/jungle_pack_59.png")
+                    self.decorations.append(d)
+                    self.entities.add(d)
+
+                if col == "¡":
+                    d = Decoration(x, y, 128,128, "platform/jungle_pack_57.png")
+                    self.decorations.append(d)
+                    self.entities.add(d)
+                if col == "B":
+                    d = Decoration(x, y, 128,128, "platform/jungle_pack_66.png")
+                    self.decorations.append(d)
+                    self.entities.add(d)
+
+
 
 
                 if col == "F":
@@ -101,7 +122,7 @@ class Level():
 
         self.camera = Camera(Camera.complex_camera, self.total_level_width, self.total_level_height)
         self.entities.add(self.player)
-        self.backGround = Background(PATH+'bg1.png', [0,0], (1280, 720))
+        self.backGround = Background(PATH+'platform/bg_jungle.png', [0,0], (1280, 720))
 
         self.playmusic(bg_music)
     def update(self, up, down, left, right, space, running):
@@ -155,7 +176,7 @@ class Media_Screen():
 
 class Start_Screen(Media_Screen):
     def __init__(self, timer):
-        Media_Screen.__init__(self, timer,(Background(PATH+'bg1.png', [0,0], (1280, 720))))
+        Media_Screen.__init__(self, timer,(Background(PATH+'platform/bg_jungle.png', [0,0], (1280, 720))))
         self.screen=pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.show_start_screen()
     def show_start_screen(self):
@@ -183,30 +204,30 @@ def main():
 
     up = down = left = right = space = running = False
     level = [
-        "                                                                                                                            ",
-        "                                                                                                                            ",
-        "                                                                                                                            ",
-        "                                                                                                                            ",
-        "                                                                                            Q                               ",
-        "                                                                                                              3PPP1         ",
-        "                                                                                                              22222         ",
-        "                                                                                                              22222         ",
-        "                                                                                          3PPPPPPP1           22222         ",
-        "                                                                                          222222222           22222PPPPPPPPP",
-        "                                                                                          222222222           22222222222222",
-        "                                                                                          222222222           22222222222222",
-        "                                                                             S    3PPPPPPP222222222           22222222222222",
-        "                                                                         3PPPPPPPP22222222222222222           22222222222222",
-        "                                                                         22222222222222222222222222           22222222222222",
-        "                                                                    3PPPP22222222222222222222222222           22222222222222",
-        "                                                5PPPPPP7         0PP2222222222222222222222222222222           22222222222222",
-        "                                                 666666            66662222222222222222222222222222           22222222222222",
-        "                                      PPPPPP                           6666222222222222222222222222           22222222222222",
-        "                                      622226                               662222222222222222222222           22222222222222",
-        "                                       6666                                  6666666666666222222222           22222222222222",
-        "                                                                                          222222222           22222222222222",
-        "       F                                                                                  222222222           22222222222222",
-        "PPPPPPPPPPPPPPPPPP1         3PPPPPPPPPPPPPPPPPPPPPPPP1         P     3PPPPPPPPPPPPPPPPPPPP222222222           22222222222222"]
+        "                                                                                                                             ",
+        "                                                                                                                             ",
+        "                                                                                                                             ",
+        "                                                                                                                             ",
+        "                                                                                             Q                               ",
+        "                                                                                                               3PPP1         ",
+        "                                                                                                               22222         ",
+        "                                                                                              D                22222         ",
+        "                                                                                           3PPPPPPP1           22222         ",
+        "                                                                                           222222222           22222PPPPPPPPP",
+        "                                                                                           222222222           22222222222222",
+        "                                                                                      B    222222222           22222222222222",
+        "                                                                              S    3PPPPPPP222222222           22222222222222",
+        "                                                                          3PPPPPPPP22222222222222222           22222222222222",
+        "                                                                      !   22222222222222222222222222           22222222222222",
+        "                                                   B                 3PPPP22222222222222222222222222           22222222222222",
+        "                                                5PPPPPP7          0PP2222222222222222222222222222222           22222222222222",
+        "                                        B        666666             66662222222222222222222222222222           22222222222222",
+        "                                      PPPPPP                            6666222222222222222222222222           22222222222222",
+        "                                      622226                                662222222222222222222222           22222222222222",
+        "                                       6666                                   6666666666666222222222           22222222222222",
+        "                                                                                           222222222           22222222222222",
+        "    ¡  F     !                   B          D     ¡                     D                  222222222           22222222222222",
+        "PPPPPPPPPPPPPPPPPP1         3PPPPPPPPPPPPPPPPPPPPPPPP1         P     3PPPPPPPPPPPPPPPPPPPP2222222222           22222222222222"]
     player_settings = (32, 32,PATH+ "froggy.png")
     level = Level(level, player_settings, PATH+'bg_music1.ogg')
 
@@ -563,6 +584,25 @@ class Platform(Entity):
                 self.image = pygame.transform.scale(self.image, (32, 32)).convert_alpha()
                 IMAGES[(PATH + image_path,32,32)] = self.image
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
+    def update(self):
+        pass
+
+class Decoration(Entity):
+    def __init__(self, x, y, w, h, image_path):
+        Entity.__init__(self)
+
+        self._image_origin = pygame.image.load(PATH + image_path)
+        self._image_origin = pygame.transform.scale(self._image_origin, (w, h))
+        self.image  = self._image_origin
+
+        image_rect = None
+        try:
+             image_rect = IMAGE_SIZES[PATH + image_path]
+        except KeyError:
+            image_rect = crop(PATH + image_path, w, h)
+            IMAGE_SIZES[PATH + image_path] = image_rect
+        self.rect = Rect(x, y-h+32, image_rect[0], image_rect[1])
+
     def update(self):
         pass
 
