@@ -23,9 +23,7 @@ class Level():
     def __init__(self, level, player_settings, bg_music):
         self.screen = pygame.display.set_mode(DISPLAY, FLAGS, DEPTH)
         self.bg = pygame.Surface((32,32))
-        #self.bg =pygame.image.load("bg1.png")
         self.bg.convert()
-        #self.bg.fill(Color("#000000"))
         self.entities = pygame.sprite.Group()
 
         self.platforms = []
@@ -107,9 +105,7 @@ class Level():
                     self.decorations.append(d)
                     self.entities.add(d)
 
-
-
-
+                #player
                 if col == "F":
                     self.player = Player(x, y, player_settings[2])
                 x += 32
@@ -117,8 +113,6 @@ class Level():
             x = 0
         self.total_level_width  = len(level[0])*32
         self.total_level_height = len(level)*32
-
-        #self.player = Player(player_settings[0],player_settings[1],player_settings[2])
 
         self.camera = Camera(Camera.complex_camera, self.total_level_width, self.total_level_height)
         self.entities.add(self.player)
@@ -184,7 +178,6 @@ class Start_Screen(Media_Screen):
         image = pygame.image.load(PATH+"logo.png")
         image = pygame.transform.scale(image,(550,200))
         image_width, image_height= image.get_size()
-        #self.screen.fill("#0033FF")
         self.screen.blit(image,((WIN_WIDTH-image_width)/2,(WIN_HEIGHT-image_height)/3))
         self.draw_text("PRESS ANY KEY",32,(240,248,255),WIN_WIDTH/2,WIN_HEIGHT*3 /4)
         pygame.display.flip()
@@ -329,20 +322,10 @@ class EnemyMosquito(Entity):
         self.image.convert()
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
     def update(self, platforms, posX, posY):
-        # increment in x direction
-        #self.rect.left += self.xvel
-        # do x-axis collisions
         self.xvel = 4.0
         self.yvel = 4.0
-
         self.move_towards_player(posX, posY)
-
         self.collide(self.xvel, 0, platforms)
-        # increment in y direction
-        #self.rect.top += self.yvel
-        # assuming we're in the air
-        #self.onGround = False;
-        # do y-axis collisio ns
         self.collide(0, self.yvel, platforms)
 
     def move_towards_player(self, posX, posY):
@@ -402,20 +385,10 @@ class EnemySpider(Entity):
         self.image.convert()
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
     def update(self, platforms, posX, posY):
-        # increment in x direction
-        #self.rect.left += self.xvel
-        # do x-axis collisions
         self.xvel = 6.0
         self.yvel = 4.0
-
         self.move_towards_player(posX, posY)
-
         self.collide(self.xvel, 0, platforms)
-        # increment in y direction
-        #self.rect.top += self.yvel
-        # assuming we're in the air
-        #self.onGround = False;
-        # do y-axis collisio ns
         self.collide(0, self.yvel, platforms)
 
     def move_towards_player(self, posX, posY):
@@ -461,14 +434,11 @@ class Player(Entity):
         self.xvel = 0
         self.yvel = 0
         self.onGround = False
-        #self.image = Surface((32,32))
         self._image_origin = pygame.image.load(image_path)
         self._image_origin = pygame.transform.scale(self._image_origin, (32, 32)).convert_alpha()
         self._image_toLeft = pygame.transform.flip(self._image_origin, True, False).convert_alpha()
         self.image  = self._image_origin
-        #self.image.fill(Color("#0000FF"))
         image_rect = (self.image.get_rect().size)
-        #self.image.convert()
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
         self.tongue = 0
 
@@ -542,7 +512,6 @@ class Player(Entity):
             if pygame.sprite.collide_rect(self, e):
                 print("--------CHOCA------")
                 return True
-                #pygame.event.post(pygame.event.Event(QUIT))
         return False
     def beobserver(self, enemies, platforms):
         for q in enemies:
