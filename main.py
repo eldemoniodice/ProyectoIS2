@@ -196,10 +196,7 @@ def main():
     screen=Start_Screen(timer)
 
     up = down = left = right = space = running = False
-
-    #para cambiar niveles cambiar el nombre a level (no duplicados)
-
-    level1 = [
+    level = [
         "                                                                                                                             ",
         "                                                                                                                             ",
         "                                                                                                                             ",
@@ -225,96 +222,9 @@ def main():
         "    ¡  F     !                   B          D     ¡                     D                  222222222           22222222222222",
         "PPPPPPPPPPPPPPPPPP1         3PPPPPPPPPPPPPPPPPPPPPPPP1         P     3PPPPPPPPPPPPPPPPPPPP2222222222           22222222222222"]
 
-    level= [
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                            B                                  B                                             ",
-        "                               3PPPPPPPPPPPPPPPPPPPP1                 3PPPPPPPPPPPPPPPPPPPP1                                 ",
-        "                               6666666222222222222222                 2222222222222222666666                                 ",
-        "                      PPP             666666666666666                 6666666666666666            PPP                        ",
-        "                      666                                                                         666                        ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                 PPP                                                                                  PPP                    ",
-        "                 666                                                                                  666                    ",
-        "  F!                                 B                        B                  D                                   ¡       ",
-        "PPPPPPPPPPPP1                  3PPPPPPPPPPP1        3PPPPPPPPPPPPPPPPP1        3PPPPPPPPPPP1                    3PPPPPPPPPPPP",
-        "2222222266666                  6666662222222        2222222222222222222        2222222266666                    6666622222222",
-        "22226666                             6666666        6666666666666666666        66666666                              22222222",
-        "6666                                                                                                                 22222222",
-        "                                                                                                                     22222222",
-        "              PPP                                                                                         PPP        22222222",
-        "              666                                                                                         666        22222222",
-        "                                                                                                                     22222222",
-        "                                                                                                                     22222222",
-        "                          B                                                                   B                      22222222",
-        "                       3PPPPP1                  B                                            3PPPPP1                 22222222",
-        "                       6666662PPPPPPP1      3PPPPPP1        3PPP1      3PPPPPP1        PPPPPP2666666                 22222222"]
-
-
-
-    level3 = [
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             "]
-
-
-
-
-    level_vacio = [
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             ",
-        "                                                                                                                             "]
-
-
-
     player_settings = (32, 32,PATH+ "froggy.png")
+
+    
     level = Level(level, player_settings, PATH+'bg_music1.ogg')
 
 
@@ -341,7 +251,7 @@ def main():
             if e.type == KEYDOWN and e.key == K_RIGHT:
                 right = True
             if e.type == KEYDOWN and e.key == K_SPACE:
-                running = True
+                space = True
             if e.type == KEYUP and e.key == K_UP:
                 up = False
             if e.type == KEYUP and e.key == K_DOWN:
@@ -527,13 +437,38 @@ class Player(Entity):
         self.xvel = 0
         self.yvel = 0
         self.onGround = False
+        
         self._image_origin = pygame.image.load(image_path)
         self._image_origin = pygame.transform.scale(self._image_origin, (32, 32)).convert_alpha()
         self._image_toLeft = pygame.transform.flip(self._image_origin, True, False).convert_alpha()
         self.image  = self._image_origin
+        
         image_rect = (self.image.get_rect().size)
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
         self.tongue = 0
+
+        #todas las demas imagenes
+        self.imagen1 = pygame.image.load(PATH+ "froggy1.gif")
+        self.imagen1 = pygame.transform.scale(self.imagen1, (32, 32)).convert_alpha()
+        self.imagen2 = pygame.image.load(PATH+ "froggy2.gif")
+        self.imagen2 = pygame.transform.scale(self.imagen2, (32, 32)).convert_alpha()
+        self.imagen3 = pygame.image.load(PATH+ "froggy3.gif")
+        self.imagen3 = pygame.transform.scale(self.imagen3, (32, 32)).convert_alpha()
+        
+        self.imagenes_derecha = [self._image_origin, self.imagen1, self.imagen2, self.imagen3]
+
+        self.imagen1 = pygame.transform.flip(self.imagen1, True, False).convert_alpha()
+        self.imagen2 = pygame.transform.flip(self.imagen2, True, False).convert_alpha()
+        self.imagen3 = pygame.transform.flip(self.imagen3, True, False).convert_alpha()
+
+        
+        self.imagenes_izquierda = [self._image_toLeft, self.imagen1, self.imagen2, self.imagen3]
+        self.lado = 'derecha'
+        self.animacion = Animacion()
+        
+
+        ################
+        self.forma = [0, 'ida']
 
     def update(self, up, down, left, right, space, running, platforms, enemies, level_high):
         vida = True
@@ -546,13 +481,31 @@ class Player(Entity):
             #self.xvel = 12
         if left:
             self.xvel = -8
-            self.image = self._image_toLeft
+            self.lado = 'izquierda'
         if right:
             self.xvel = 8
-            self.image = self._image_origin
+            self.lado = 'derecha'
         if space:
             if self.tongue <= 0:
                 self.tongue = 20
+        print(self.forma[0])
+
+        #
+        if space:
+            self.forma = self.animacion.animarCompleta(self.imagenes_derecha, self.forma)
+            print('22222222222222222')
+        elif self.forma[0] != 0:
+            self.forma = self.animacion.animarCompleta(self.imagenes_derecha, self.forma)
+
+        print(space)
+
+        #cambiar imagen
+        if self.lado == 'izquierda':
+            self.image = self.imagenes_izquierda[self.forma[0]]
+        else:
+            self.image = self.imagenes_derecha[self.forma[0]]
+        
+                
         if not self.onGround:
             # only accelerate with gravity if in the air
             self.yvel += 0.3
@@ -574,7 +527,7 @@ class Player(Entity):
         self.collide(0, self.yvel, platforms)
         vida = self.collide_enemies(enemies)
         self.beobserver(enemies, platforms)
-
+        
         if(self.rect.y>level_high or (vida)):
             return False
         else:
@@ -671,6 +624,41 @@ class Decoration(Entity):
 class ExitBlock(Platform):
     def __init__(self, x, y):
         Platform.__init__(self, x, y, "platform/18.png")
+
+
+class Animacion:
+    def __init__(self):
+        pass
+        
+    def animarCompleta(self, imagenes, forma):
+
+        # es +1 ya que en la ultima posicion va a ir si es ida o vuelta
+        if forma[0] +1 == len(imagenes):
+            forma[1] = 'vuelta'
+
+        # se verifica si esta en la ida o vuelta
+        if forma[1] == 'ida':
+            forma[0] = forma[0] + 1
+            
+        elif forma[1] == 'vuelta':
+            forma[0] = forma[0] -1
+
+            if forma[0] == 0:
+                forma[1] = 'ida'
+
+        
+        return forma
+    
+
+    def animarIda(self, imagenes, i):
+
+        # es +1 ya que aca no hay ida o vuelta
+        if i +1 == len(imagenes):
+            i =0
+
+        else:
+            i = i+1
+        return i
 
 if __name__ == "__main__":
     main()
