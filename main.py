@@ -15,7 +15,7 @@ FLAGS = 0
 CAMERA_SLACK = 30
 
 IMAGE_SIZES = {}
-
+IMAGES = {}
 PATH="Resources/"
 
 
@@ -301,8 +301,8 @@ class EnemyMosquito(Entity):
         self.follow = False
         self.onGround = False
         self._image_origin = pygame.image.load(PATH + "mosquito1.png")
-        self._image_origin = pygame.transform.scale(self._image_origin, (32, 32))
-        self._image_toLeft = pygame.transform.flip(self._image_origin, True, False)
+        self._image_origin = pygame.transform.scale(self._image_origin, (32, 32)).convert_alpha()
+        self._image_toLeft = pygame.transform.flip(self._image_origin, True, False).convert_alpha()
         self.image  = self._image_origin
         image_rect = (self.image.get_rect().size)
         self.image.convert()
@@ -324,11 +324,6 @@ class EnemyMosquito(Entity):
         # do y-axis collisio ns
         self.collide(0, self.yvel, platforms)
 
-
-        a = Surface((32, 32))
-        a.convert()
-        a.fill(Color("#d8c217")) # change for image
-        b = Rect(32, 32, 32, 32)
     def move_towards_player(self, posX, posY):
         # find normalized direction vector (dx, dy) between enemy and player
         dx, dy = self.rect.x - posX, self.rect.y - posY
@@ -379,8 +374,8 @@ class EnemySpider(Entity):
         self.follow = False
         self.onGround = False
         self._image_origin = pygame.image.load(PATH + "spider1.png")
-        self._image_origin = pygame.transform.scale(self._image_origin, (32, 32))
-        self._image_toLeft = pygame.transform.flip(self._image_origin, True, False)
+        self._image_origin = pygame.transform.scale(self._image_origin, (32, 32)).convert_alpha()
+        self._image_toLeft = pygame.transform.flip(self._image_origin, True, False).convert_alpha()
         self.image  = self._image_origin
         image_rect = (self.image.get_rect().size)
         self.image.convert()
@@ -402,11 +397,6 @@ class EnemySpider(Entity):
         # do y-axis collisio ns
         self.collide(0, self.yvel, platforms)
 
-
-        a = Surface((32, 32))
-        a.convert()
-        a.fill(Color("#d8c217")) # change for image
-        b = Rect(32, 32, 32, 32)
     def move_towards_player(self, posX, posY):
         dist = math.hypot(self.rect.x - posX, self.rect.y - posY) #math.sqrt(dx*dx + dy*dy)
         if not self.follow:
@@ -452,8 +442,8 @@ class Player(Entity):
         self.onGround = False
         #self.image = Surface((32,32))
         self._image_origin = pygame.image.load(image_path)
-        self._image_origin = pygame.transform.scale(self._image_origin, (32, 32))
-        self._image_toLeft = pygame.transform.flip(self._image_origin, True, False)
+        self._image_origin = pygame.transform.scale(self._image_origin, (32, 32)).convert_alpha()
+        self._image_toLeft = pygame.transform.flip(self._image_origin, True, False).convert_alpha()
         self.image  = self._image_origin
         #self.image.fill(Color("#0000FF"))
         image_rect = (self.image.get_rect().size)
@@ -500,11 +490,7 @@ class Player(Entity):
         self.collide(0, self.yvel, platforms)
         vida = self.collide_enemies(enemies)
         self.beobserver(enemies, platforms)
-
-        a = Surface((32, 32))
-        a.convert()
-        a.fill(Color("#d8c217")) # change for image
-        b = Rect(32, 32, 32, 32)
+        
         if(self.rect.y>level_high or (vida)):
             return False
         else:
@@ -565,16 +551,17 @@ class Platform(Entity):
     def __init__(self, x, y, image_path):
         Entity.__init__(self)
 
-        self._image_origin = pygame.image.load(PATH + image_path)
-        self._image_origin = pygame.transform.scale(self._image_origin, (32, 32))
-        self.image  = self._image_origin
-
         image_rect = None
         try:
              image_rect = IMAGE_SIZES[PATH + image_path]
+             self.image = IMAGES[(PATH + image_path, 32, 32)]
         except KeyError:
             image_rect = crop(PATH + image_path, 32, 32)
             IMAGE_SIZES[PATH + image_path] = image_rect
+            if (PATH + image_path,32,32) not in IMAGES:
+                self.image = pygame.image.load(PATH + image_path)
+                self.image = pygame.transform.scale(self.image, (32, 32)).convert_alpha()
+                IMAGES[(PATH + image_path,32,32)] = self.image
         self.rect = Rect(x, y, image_rect[0], image_rect[1])
     def update(self):
         pass
