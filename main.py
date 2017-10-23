@@ -4,6 +4,7 @@ from PIL import Image, ImageOps
 import numpy
 from pygame import *
 import math
+import _thread
 WIN_WIDTH = 800
 WIN_HEIGHT = 640
 HALF_WIDTH = int(WIN_WIDTH / 2)
@@ -561,7 +562,7 @@ class Player(Entity):
 
         ################
         self.forma = [0, 'ida']
-
+        self.sacandolengua=False
     def update(self, up, down, left, right, space, running, platforms, enemies, level_high):
         vida = True
         if up:
@@ -583,13 +584,11 @@ class Player(Entity):
         #print(self.tongue)
 
         
-        if space and self.forma[0] == 0:
-            self.forma = self.animacion.animarCompleta(self.imagenes_derecha, self.forma)
-            #print('22222222222222222')
-        elif self.forma[0] != 0:
-            if self.tongue%5==0:
-                self.forma = self.animacion.animarCompleta(self.imagenes_derecha, self.forma)
-
+        if space and self.sacandolengua==False:
+            try:
+                _thread.start_new_thread(self.sacarlengua, ())
+            except Exception:
+                print("Error en hilo")
         #cambiar imagen
         if self.lado == 'izquierda':
             self.image = self.imagenes_izquierda[self.forma[0]]
@@ -623,6 +622,13 @@ class Player(Entity):
             return False
         else:
             return True
+    def sacarlengua(self):
+        self.sacandolengua=True
+        dt = pygame.time.Clock()
+        for i in range(6):
+            dt.tick(5)
+            self.forma = self.animacion.animarCompleta(self.imagenes_derecha, self.forma)
+        self.sacandolengua=False
 
     def collide(self, xvel, yvel, platforms):
         for p in platforms:
